@@ -1,0 +1,12 @@
+#!/usr/bin/env coffee
+
+'use strict'
+
+process.title = 'styledocs'
+
+Styledocs = require '../coffee/styledocs.coffee'
+
+styledocs = new Styledocs()
+
+styledocs.cli()
+styledocs.execute()
