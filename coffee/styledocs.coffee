@@ -63,8 +63,11 @@ class Styledocs
 
   compile: (sections) ->
     # TODO:
-    template = fs.readFileSync "#{ __dirname }/../share/view.jade", file_encoding
+    template_file = "#{ __dirname }/../share/template/docs.jade"
+    template = fs.readFileSync template_file, file_encoding
+
     @renderer.render template,
+      language: 'ja'
       sections: sections
       title: 'styledocs'
       pretty: true

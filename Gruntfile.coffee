@@ -12,13 +12,13 @@ module.exports = (grunt) ->
       gruntfile:
         files: ["Gruntfile.coffee"]
         tasks: ["coffeelint:gruntfile"]
-      main:
+      docs:
         files: [
           "coffee/*.coffee"
           "coffee/**/*.coffee"
         ]
         tasks: [
-          "coffeelint:main"
+          "coffeelint:docs"
           "simplemocha"
         ]
       spec:
@@ -38,7 +38,7 @@ module.exports = (grunt) ->
       gruntfile: [
         'Gruntfile.coffee'
       ]
-      main: [
+      docs: [
         'coffee/*.coffee'
         'coffee/**/*.coffee'
       ]
@@ -51,5 +51,8 @@ module.exports = (grunt) ->
       options:
         ui: 'bdd'
         reporter: 'spec'
-      main:
+      docs:
         src: ["test/**/*.coffee"]
+
+    copy: {}
+
