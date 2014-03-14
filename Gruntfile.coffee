@@ -4,6 +4,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-coffeelint'
   grunt.loadNpmTasks 'grunt-simple-mocha'
+  grunt.loadNpmTasks 'grunt-contrib-concat'
 
   grunt.registerTask 'test', ['coffeelint', 'simplemocha']
 
@@ -54,5 +55,11 @@ module.exports = (grunt) ->
       docs:
         src: ["test/**/*.coffee"]
 
-    copy: {}
+    concat:
+      view:
+        src: [
+          "bower_components/jquery/dist/jquery.min.js"
+          "bower_components/bootstrap/dist/js/bootstrap.min.js"
+        ]
+        dest: "share/script/docs.js"
 

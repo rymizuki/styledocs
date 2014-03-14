@@ -60,7 +60,10 @@ class Styledocs
 
   createNavigation: (rootdir) ->
     tmplLi = _.template '<li><a href="<%= href %>"><%= label %></a></li>'
-    tmplUl = _.template '<li><a href="<%= href %>"><%= label %></a><ul><%= list %></ul></li>'
+    tmplUl = _.template '<li>'+
+      '<a class="dropdown-toggle" href="<%= href %>" data-toggle="dropdown">'+
+      '<%= label %> <b class="caret"></b>'+
+      '</a><ul class="dropdown-menu"><%= list %></ul></li>'
     extHtml = (filename) -> filename.replace(/\.(css|sass|scss|less)$/, '.html')
     recureMake = (rootdir, subdir) ->
       abspath = path.join rootdir, (subdir || '')
@@ -80,7 +83,7 @@ class Styledocs
         li.push line
       li.join('')
 
-    @navigation = recureMake rootdir
+    @navigation = "<ul class='nav navbar-nav'>#{recureMake rootdir}</ul>"
 
   getSections: (fpath) ->
     raw = fs.readFileSync fpath, file_encoding
@@ -94,9 +97,11 @@ class Styledocs
 
     @renderer.render template,
       language: 'ja'
+      title: 'styledocs'
+      style: fs.readFileSync "#{__dirname}/../bower_components/bootstrap/dist/css/bootstrap.min.css", file_encoding
+      script: fs.readFileSync "#{__dirname}/../share/script/docs.js", file_encoding
       navigation: @navigation
       sections: sections
-      title: 'styledocs'
       pretty: true
 
   output: (subdir, input_file, html) ->
