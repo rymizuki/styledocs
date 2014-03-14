@@ -93,8 +93,11 @@ class Styledocs
     template = fs.readFileSync template_file, file_encoding
 
     @renderer.render template,
+<<<<<<< HEAD
       language: 'ja'
+=======
       navigation: @navigation
+>>>>>>> master
       sections: sections
       title: 'styledocs'
       pretty: true
