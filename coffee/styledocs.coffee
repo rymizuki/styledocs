@@ -2,54 +2,80 @@
 
 fs   = require 'fs'
 path = require 'path'
+_    = require 'underscore'
 
 Renderer  = require './styledocs/renderer'
 CSSParser = require './styledocs/css_parser'
 
+file_ext_regexp = /\.(css|scss|sass|less)$/
+file_encoding   = 'utf8'
+line_break_char = '\n'
+
 class Styledocs
+  # properties
+  options: {}
+
+  # methods
   cli:  require './styledocs/cli'
   file: require './styledocs/file'
-  parser:   new CSSParser()
+#  parser:   new CSSParser()
   renderer: new Renderer()
 
+  constructor: (options) ->
+    if options?
+      # TODO: extend
+      this.options.input  = options.input  if options.input?
+      this.oputons.output = options.output if options.output?
+
   execute: () ->
-    parser   = this.parser
-    renderer = this.renderer
-    f        = this.file
+    if @options.help
+      # TODO:
+      return
 
-    dir  = '' # なんか入れて
-    file = '' # なんか入れて
-    dest_dir  = "dest/"
-    encoding = 'utf8'
+    if @options.version
+      # TODO:
+      return
 
-    do ->
-      unless fs.existsSync(dest_dir)
-        f.mkpath dest_dir
+    input_dir  = @options.input
+    output_dir = @options.output
 
-    do ->
-      f.recurse dir, (fpath, rootdir, subdir, filename) ->
-        if filename.match(/\.(css|scss|sass|less)$/)
-          dest_f = filename.replace(/\.(css|scss|sass|less)/, '.html')
-          dest_d = path.join dest_dir, subdir || ''
+    # initialize
+    @file.mkpath output_dir unless @file.exists output_dir
 
-          unless fs.existsSync(dest_d)
-            f.mkpath dest_d
+    that = this
+    # create navigation
+    # execution
+    @file.recurse input_dir, (full_path, rootdir, subdir, filename) ->
+      if filename.match(file_ext_regexp)
+        # stylesheet -> markdown
+        sections = that.getSections full_path
 
-          fs.readFile fpath, encoding, (err, raw) ->
-            sections = parser.getSections(raw.split '\n')
+        # markdown -> jade -> html
+        html = that.compile sections
 
-            html = renderer.render [
-              "doctype html"
-              "html(lang='ja')"
-              "  head"
-              "    meta(charset='UTF-8')"
-              "  body"
-              "    != markdown(sections)"
-            ].join('\n'), sections: sections
+        # writing
+        that.output subdir || '', filename, html
 
-            fs.writeFileSync path.join(dest_d, dest_f), html
-            console.log 'write: %s', path.join(dest_d, dest_f)
+  getSections: (fpath) ->
+    raw = fs.readFileSync fpath, file_encoding
+    parser = new CSSParser(raw).parse()
+    sections = parser.getSection 'docs'
 
-    console.log 'executed'
+  compile: (sections) ->
+    # TODO:
+    template = fs.readFileSync "#{ __dirname }/../share/view.jade", file_encoding
+    @renderer.render template,
+      sections: sections
+      title: 'styledocs'
+      pretty: true
+
+  output: (subdir, input_file, html) ->
+    output_dir  = path.join @options.output, subdir
+    output_file = input_file.replace file_ext_regexp, '.html'
+
+    @file.mkpath output_dir unless @file.exists output_dir
+
+    fs.writeFileSync path.join(output_dir, output_file), html
+    console.log 'write: %s', path.join(output_dir, output_file)
 
 module.exports = Styledocs

@@ -1,6 +1,7 @@
 'use strict'
 
 nopt = require 'nopt'
+
 util =
   slice: Array.prototype.slice
   extend: (object) ->
@@ -23,7 +24,14 @@ oplist =
     short: 'V'
     info: 'Print the styledocs version. Combine with --verbose for more info.'
     type: Boolean
-
+  input:
+    short: 'i'
+    info: 'Input directory.'
+    type: String
+  output:
+    short: 'o'
+    info: 'Output directory.'
+    type: String
 
 # Parse `oplist` into a form that nopt can handle.
 aliases = {}

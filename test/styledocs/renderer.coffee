@@ -1,7 +1,7 @@
 'use strict'
 
 expect   = require 'expect.js'
-Renderer = require '../coffee/styledocs/renderer'
+Renderer = require '../../coffee/styledocs/renderer'
 
 describe 'Renderer', ->
   describe '.render()', ->
