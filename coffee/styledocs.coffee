@@ -44,6 +44,8 @@ class Styledocs
 
     that = this
     # create navigation
+    @createNavigation input_dir
+
     # execution
     @file.recurse input_dir, (full_path, rootdir, subdir, filename) ->
       if filename.match(file_ext_regexp)
@@ -56,6 +58,30 @@ class Styledocs
         # writing
         that.output subdir || '', filename, html
 
+  createNavigation: (rootdir) ->
+    tmplLi = _.template '<li><a href="<%= href %>"><%= label %></a></li>'
+    tmplUl = _.template '<li><a href="<%= href %>"><%= label %></a><ul><%= list %></ul></li>'
+    extHtml = (filename) -> filename.replace(/\.(css|sass|scss|less)$/, '.html')
+    recureMake = (rootdir, subdir) ->
+      abspath = path.join rootdir, (subdir || '')
+
+      li = []
+      fs.readdirSync(abspath).forEach (filename) ->
+        filepath = path.join abspath, filename
+
+        line = null
+        if fs.statSync(filepath).isDirectory()
+          line = tmplUl
+            label: filename
+            href:  '#'
+            list:  recureMake abspath, filename
+        else
+          line = tmplLi label: filename, href: path.join (subdir || ''), extHtml(filename)
+        li.push line
+      li.join('')
+
+    @navigation = recureMake rootdir
+
   getSections: (fpath) ->
     raw = fs.readFileSync fpath, file_encoding
     parser = new CSSParser(raw).parse()
@@ -65,6 +91,7 @@ class Styledocs
     # TODO:
     template = fs.readFileSync "#{ __dirname }/../share/view.jade", file_encoding
     @renderer.render template,
+      navigation: @navigation
       sections: sections
       title: 'styledocs'
       pretty: true
