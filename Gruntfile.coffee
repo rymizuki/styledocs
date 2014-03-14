@@ -4,6 +4,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-coffeelint'
   grunt.loadNpmTasks 'grunt-simple-mocha'
+  grunt.loadNpmTasks 'grunt-contrib-concat'
 
   grunt.registerTask 'test', ['coffeelint', 'simplemocha']
 
@@ -12,13 +13,13 @@ module.exports = (grunt) ->
       gruntfile:
         files: ["Gruntfile.coffee"]
         tasks: ["coffeelint:gruntfile"]
-      main:
+      docs:
         files: [
           "coffee/*.coffee"
           "coffee/**/*.coffee"
         ]
         tasks: [
-          "coffeelint:main"
+          "coffeelint:docs"
           "simplemocha"
         ]
       spec:
@@ -38,7 +39,7 @@ module.exports = (grunt) ->
       gruntfile: [
         'Gruntfile.coffee'
       ]
-      main: [
+      docs: [
         'coffee/*.coffee'
         'coffee/**/*.coffee'
       ]
@@ -51,5 +52,14 @@ module.exports = (grunt) ->
       options:
         ui: 'bdd'
         reporter: 'spec'
-      main:
+      docs:
         src: ["test/**/*.coffee"]
+
+    concat:
+      view:
+        src: [
+          "bower_components/jquery/dist/jquery.min.js"
+          "bower_components/bootstrap/dist/js/bootstrap.min.js"
+        ]
+        dest: "share/script/docs.js"
+

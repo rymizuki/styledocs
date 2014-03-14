@@ -1,0 +1,27 @@
+doctype html
+html(lang=language)
+  head
+    meta(charset="UTF-8")
+    meta(name="viewport",content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=0.6,user-scalable=no")
+    title
+      = title
+    style
+      != style
+    script
+      != script
+  body
+   header.navbar.navbar-default(role="navigation")
+      div.container-fluid
+        div.navbar-header
+          button.navbar-toggle(type="button",data-toggle="collapse",data-target="#site-nav")
+            span.sr-only navigation
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a.navbar-brand
+            = title
+        nav#site-nav.collapse.navbar-collapse
+          != navigation
+    article.container-fluid
+      != markdown(sections)
+

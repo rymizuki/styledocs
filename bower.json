@@ -1,0 +1,19 @@
+{
+  "name": "styledocs",
+  "version": "0.0.0",
+  "homepage": "https://github.com/rymizuki/styledocs",
+  "authors": [
+    "mizuki_r <ry.mizuki@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "bootstrap": "~3.1.1"
+  }
+}
