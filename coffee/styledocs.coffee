@@ -79,7 +79,9 @@ class Styledocs
             href:  '#'
             list:  recureMake abspath, filename
         else
-          line = tmplLi label: filename, href: path.join (subdir || ''), extHtml(filename)
+          line = tmplLi
+            label: filename
+            href: path.join((subdir || ''), extHtml(filename)).split('/').join('-')
         li.push line
       li.join('')
 
@@ -105,12 +107,10 @@ class Styledocs
       pretty: true
 
   output: (subdir, input_file, html) ->
-    output_dir  = path.join @options.output, subdir
     output_file = input_file.replace file_ext_regexp, '.html'
+    filename  = path.join(subdir, output_file).split('/').join('-')
 
-    @file.mkpath output_dir unless @file.exists output_dir
-
-    fs.writeFileSync path.join(output_dir, output_file), html
-    console.log 'write: %s', path.join(output_dir, output_file)
+    fs.writeFileSync path.join(@options.output, filename), html
+    console.log 'write: %s', filename
 
 module.exports = Styledocs
