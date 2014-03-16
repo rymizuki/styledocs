@@ -10,11 +10,12 @@ marked.setOptions
 class Renderer
   filters:
     markdown: marked
+    convert: marked
   jade: jade
 
   render: (template, args) ->
     opts = {}
-    _.extend opts, this.filters, args
-    this.jade.render template, opts
+    _.extend opts, @filters, args
+    @jade.render template, opts
 
 module.exports = Renderer

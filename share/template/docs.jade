@@ -27,12 +27,4 @@ html(lang=data.language)
           != data.navigation
 
     article.container-fluid
-      != markdown(data.sections)
-
-    article.container-fluid
-      - for(var cnt = 0; cnt < data.codes.length; cnt++)
-        div.highlight
-          pre
-            code.prettyprint.lang-sass
-              != data.codes[cnt]
-
+      != convert(data.sections)

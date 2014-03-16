@@ -90,11 +90,18 @@ class Styledocs
   getSections: (fpath) ->
     raw = fs.readFileSync fpath, file_encoding
     parser = new CSSParser(raw).parse()
+
+    result  = []
+    section = parser.getSection 'docs'
+    parser.getSection('code').forEach (code) ->
+      sass_content = code.join('\n')
+      section = section.replace '<!-- CODE_SCOPE -->', '\n```scss\n' + sass_content + '\n```\n'
+
+
     data =
-      sections: parser.getSection 'docs'
+      sections: section
       codes:    parser.getSection 'code'
     data
-
 
   compile: (data) ->
     # TODO:

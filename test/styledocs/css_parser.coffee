@@ -277,16 +277,19 @@ describe 'css_parser', ->
           ""
           "this is body's style."
           ""
+          "<!-- PREVIEW_BEFORE -->"
           "```html"
           "<body>"
           "  <h1>Hello!</h1>"
           "  <p>It's awesome!!</p>"
           "</body>"
           "```"
+          "<!-- PREVIEW_AFTER -->"
           "## nav "
           ""
           "this is nav's style."
           ""
+          "<!-- PREVIEW_BEFORE -->"
           "```html"
           "<nav>"
           "  <ul>"
@@ -296,6 +299,7 @@ describe 'css_parser', ->
           "  </ul>"
           "</nav>"
           "```"
+          "<!-- PREVIEW_AFTER -->"
         ].join '\n'
 
     describe 'type is preview', ->

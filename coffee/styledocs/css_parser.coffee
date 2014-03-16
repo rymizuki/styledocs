@@ -1,8 +1,10 @@
 'use strict'
 
+EventEmitter = require('eventemitter2').EventEmitter2
+
 # CSSの文字列から
 #   commentを抽出
-class CSSParser
+class CSSParser extends EventEmitter
   commentRegExp:
     line: /^\/\//
     block:
@@ -88,11 +90,16 @@ class CSSParser
     else if @isPreviewStart(line)
       @in_preview_fg = true
       @section.preview[@cnt_preview] = []
+      # XXX: iframe用のコードを埋め込む
+      @addCollection 'docs', '<!-- PREVIEW_BEFORE -->'
       return 'docs'
     else if @in_block_fg && @isBlockCommentEnd(line)
       @in_block_fg = false
       @cnt_docs++
       @cnt_code = @cnt_docs - 1
+      # XXX: preview用のコードを埋め込む
+      @once 'add:collection', () ->
+        @addCollection 'docs', '<!-- CODE_SCOPE -->'
       return null
     else if @in_block_fg
       return 'docs'
@@ -104,7 +111,6 @@ class CSSParser
 
   addCollection: (type, line) ->
     raw = if line == null then line else @removeCommentSyntax(line)
-    #console.log @section.code if type == 'code'
 
     if type == 'docs'
       @section.docs.push raw
@@ -112,6 +118,9 @@ class CSSParser
       num = this["cnt_#{ type }"]
       @section[type][num] = [] unless @section[type][num]
       @section[type][num].push raw
+
+    @emit 'add:collection', type, raw
+    this
 
   getSection: (type) ->
     if type == 'docs'
