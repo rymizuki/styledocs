@@ -1,14 +1,17 @@
 doctype html
-html(lang=language)
+html(lang=data.language)
   head
     meta(charset="UTF-8")
     meta(name="viewport",content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=0.6,user-scalable=no")
     title
-      = title
+      = data.title
     style
-      != style
+      != data.style
+
     script
-      != script
+      != data.script
+    script.
+      $(function () { prettyPrint() });
   body
    header.navbar.navbar-default(role="navigation")
       div.container-fluid
@@ -21,7 +24,15 @@ html(lang=language)
           a.navbar-brand
             = title
         nav#site-nav.collapse.navbar-collapse
-          != navigation
+          != data.navigation
+
     article.container-fluid
-      != markdown(sections)
+      != markdown(data.sections)
+
+    article.container-fluid
+      - for(var cnt = 0; cnt < data.codes.length; cnt++)
+        div.highlight
+          pre
+            code.prettyprint.lang-sass
+              != data.codes[cnt]
 

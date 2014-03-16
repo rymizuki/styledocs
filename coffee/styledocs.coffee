@@ -50,10 +50,10 @@ class Styledocs
     @file.recurse input_dir, (full_path, rootdir, subdir, filename) ->
       if filename.match(file_ext_regexp)
         # stylesheet -> markdown
-        sections = that.getSections full_path
+        data = that.getSections full_path
 
         # markdown -> jade -> html
-        html = that.compile sections
+        html = that.compile data
 
         # writing
         that.output subdir || '', filename, html
@@ -90,20 +90,28 @@ class Styledocs
   getSections: (fpath) ->
     raw = fs.readFileSync fpath, file_encoding
     parser = new CSSParser(raw).parse()
-    sections = parser.getSection 'docs'
+    data =
+      sections: parser.getSection 'docs'
+      codes:    parser.getSection 'code'
+    data
 
-  compile: (sections) ->
+
+  compile: (data) ->
     # TODO:
     template_file = "#{ __dirname }/../share/template/docs.jade"
     template = fs.readFileSync template_file, file_encoding
 
     @renderer.render template,
-      language: 'ja'
-      title: 'styledocs'
-      style: fs.readFileSync "#{__dirname}/../bower_components/bootstrap/dist/css/bootstrap.min.css", file_encoding
-      script: fs.readFileSync "#{__dirname}/../share/script/docs.js", file_encoding
-      navigation: @navigation
-      sections: sections
+      data:
+        language: 'ja'
+        title: 'styledocs'
+        style:  fs.readFileSync  "#{__dirname}/../share/css/docs.min.css",  file_encoding
+        script: fs.readFileSync "#{__dirname}/../share/script/docs.min.js", file_encoding
+        navigation: @navigation
+        sections: data.sections
+        codes:    _(data.codes)
+          .filter (row) -> if row.length > 1 && row[0].length > 0 then true else false
+          .map    (row) -> if _.isArray(row) then row.join('\n') else row
       pretty: true
 
   output: (subdir, input_file, html) ->

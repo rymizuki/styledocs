@@ -5,8 +5,11 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-coffeelint'
   grunt.loadNpmTasks 'grunt-simple-mocha'
   grunt.loadNpmTasks 'grunt-contrib-concat'
+  grunt.loadNpmTasks 'grunt-contrib-cssmin'
+  grunt.loadNpmTasks 'grunt-contrib-uglify'
 
   grunt.registerTask 'test', ['coffeelint', 'simplemocha']
+  grunt.registerTask 'view', ["concat", "uglify", "cssmin"]
 
   grunt.initConfig
     watch:
@@ -60,6 +63,19 @@ module.exports = (grunt) ->
         src: [
           "bower_components/jquery/dist/jquery.min.js"
           "bower_components/bootstrap/dist/js/bootstrap.min.js"
+          "bower_components/google-code-prettify/src/prettify.js"
         ]
         dest: "share/script/docs.js"
 
+    uglify:
+      view:
+        files:
+          "share/script/docs.min.js": "<%= concat.view.dest %>"
+
+    cssmin:
+      view:
+        files:
+          "share/css/docs.min.css": [
+            "bower_components/bootstrap/dist/css/bootstrap.css"
+            "bower_components/google-code-prettify/src/prettify.css"
+          ]
