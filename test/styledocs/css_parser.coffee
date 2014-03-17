@@ -273,6 +273,7 @@ describe 'css_parser', ->
       it 'got docs part successful.', ->
         expect(@parser.getSection 'docs').to.be.eql [
           "# SCSS"
+          "<!-- CODE_SCOPE -->"
           "## body"
           ""
           "this is body's style."
@@ -284,7 +285,7 @@ describe 'css_parser', ->
           "  <p>It's awesome!!</p>"
           "</body>"
           "```"
-          "<!-- PREVIEW_AFTER -->"
+          "<!-- CODE_SCOPE -->"
           "## nav "
           ""
           "this is nav's style."
@@ -299,7 +300,7 @@ describe 'css_parser', ->
           "  </ul>"
           "</nav>"
           "```"
-          "<!-- PREVIEW_AFTER -->"
+          "<!-- CODE_SCOPE -->"
         ].join '\n'
 
     describe 'type is preview', ->
