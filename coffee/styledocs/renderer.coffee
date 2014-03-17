@@ -6,11 +6,11 @@ jade   = require 'jade'
 
 marked.setOptions
   gfm: true
+  langPrefix: 'prettyprint lang-'
 
 class Renderer
   filters:
     markdown: marked
-    convert: marked
   jade: jade
 
   render: (template, args) ->

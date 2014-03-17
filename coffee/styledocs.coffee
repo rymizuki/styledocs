@@ -18,7 +18,6 @@ class Styledocs
   # methods
   cli:  require './styledocs/cli'
   file: require './styledocs/file'
-#  parser:   new CSSParser()
   renderer: new Renderer()
 
   constructor: (options) ->
@@ -97,7 +96,6 @@ class Styledocs
       sass_content = code.join('\n')
       section = section.replace '<!-- CODE_SCOPE -->', '\n```scss\n' + sass_content + '\n```\n'
 
-
     data =
       sections: section
       codes:    parser.getSection 'code'
@@ -112,7 +110,7 @@ class Styledocs
       data:
         language: 'ja'
         title: 'styledocs'
-        style:  fs.readFileSync  "#{__dirname}/../share/css/docs.min.css",  file_encoding
+        style:  fs.readFileSync "#{__dirname}/../share/css/docs.min.css",  file_encoding
         script: fs.readFileSync "#{__dirname}/../share/script/docs.min.js", file_encoding
         navigation: @navigation
         sections: data.sections
