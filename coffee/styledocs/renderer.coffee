@@ -6,6 +6,7 @@ jade   = require 'jade'
 
 marked.setOptions
   gfm: true
+  langPrefix: 'prettyprint lang-'
 
 class Renderer
   filters:
@@ -14,7 +15,7 @@ class Renderer
 
   render: (template, args) ->
     opts = {}
-    _.extend opts, this.filters, args
-    this.jade.render template, opts
+    _.extend opts, @filters, args
+    @jade.render template, opts
 
 module.exports = Renderer

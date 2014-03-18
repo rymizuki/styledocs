@@ -18,7 +18,6 @@ class Styledocs
   # methods
   cli:  require './styledocs/cli'
   file: require './styledocs/file'
-#  parser:   new CSSParser()
   renderer: new Renderer()
 
   constructor: (options) ->
@@ -90,11 +89,17 @@ class Styledocs
   getSections: (fpath) ->
     raw = fs.readFileSync fpath, file_encoding
     parser = new CSSParser(raw).parse()
+
+    result  = []
+    section = parser.getSection 'docs'
+    parser.getSection('code').forEach (code) ->
+      sass_content = code.join('\n')
+      section = section.replace '<!-- CODE_SCOPE -->', '\n```scss\n' + sass_content + '\n```\n'
+
     data =
-      sections: parser.getSection 'docs'
+      sections: section
       codes:    parser.getSection 'code'
     data
-
 
   compile: (data) ->
     # TODO:
@@ -105,7 +110,7 @@ class Styledocs
       data:
         language: 'ja'
         title: 'styledocs'
-        style:  fs.readFileSync  "#{__dirname}/../share/css/docs.min.css",  file_encoding
+        style:  fs.readFileSync "#{__dirname}/../share/css/docs.min.css",  file_encoding
         script: fs.readFileSync "#{__dirname}/../share/script/docs.min.js", file_encoding
         navigation: @navigation
         sections: data.sections
