@@ -9,12 +9,12 @@ html(lang=data.language)
       != data.style
 
     script
+      != data.vender
+    script
       != data.script
-    script.
-      $(function () { prettyPrint() });
   body
    header.navbar.navbar-default(role="navigation")
-      div.container-fluid
+      div.container
         div.navbar-header
           button.navbar-toggle(type="button",data-toggle="collapse",data-target="#site-nav")
             span.sr-only navigation
@@ -22,9 +22,9 @@ html(lang=data.language)
             span.icon-bar
             span.icon-bar
           a.navbar-brand
-            = title
+            = data.title
         nav#site-nav.collapse.navbar-collapse
           != data.navigation
 
-    article.container-fluid
+    article.container
       != markdown(data.sections)

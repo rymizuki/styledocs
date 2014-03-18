@@ -38,6 +38,19 @@ class Styledocs
     input_dir  = @options.input
     output_dir = @options.output
 
+    exec = require('child_process').exec
+    recurse = @file.recurse
+    main_file = do () ->
+      files = []
+      recurse input_dir, (full_path, rootdir, subdir, filename) ->
+        files.push filename unless filename.match /^_(\w+)\.scss/
+      files
+
+    @file.mkpath "#{ output_dir }/css"
+    main_file.forEach (file) ->
+      exec "bundle exec sass --compass #{ input_dir }/#{ file } #{ output_dir }/css/main.css", (err) ->
+        console.log err
+
     # initialize
     @file.mkpath output_dir unless @file.exists output_dir
 
@@ -95,6 +108,7 @@ class Styledocs
     parser.getSection('code').forEach (code) ->
       sass_content = code.join('\n')
       section = section.replace '<!-- CODE_SCOPE -->', '\n```scss\n' + sass_content + '\n```\n'
+#      section = section.replace '<!-- PREVIEW_BEFORE -->', '<iframe class="preview"></iframe>'
 
     data =
       sections: section
@@ -111,7 +125,8 @@ class Styledocs
         language: 'ja'
         title: 'styledocs'
         style:  fs.readFileSync "#{__dirname}/../share/css/docs.min.css",  file_encoding
-        script: fs.readFileSync "#{__dirname}/../share/script/docs.min.js", file_encoding
+        vender: fs.readFileSync "#{__dirname}/../share/script/docs.min.js", file_encoding
+        script: fs.readFileSync "#{__dirname}/../share/script/preview.js", file_encoding
         navigation: @navigation
         sections: data.sections
         codes:    _(data.codes)
